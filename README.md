@@ -46,6 +46,20 @@ To start the load balancer on `0.0.0.0` port `8080` and distribute requests to b
 python R-Balancer.py -s 0.0.0.0 -p 8080 -l "127.0.0.1:8081,127.0.0.1:8082,127.0.0.1:8083"
 ```
 
+### OR Using Config file
+
+Create config file in same directory with name `R-Balancer.conf`.
+
+Example config:
+
+```json
+{
+    "server": "0.0.0.0",
+    "port": 80,
+    "list_server": "192.168.1.3:80,192.168.1.4:8080,192.168.1.5:8000"
+}
+```
+
 ## Script Overview
 
 - **Initialization**: `RBalancer` class is initialized with a list of backend servers.
