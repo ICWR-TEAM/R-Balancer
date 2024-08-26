@@ -13,7 +13,7 @@ $$ |  $$ |        $$$$$$$  |\$$$$$$$ |$$ |\$$$$$$$ |$$ |  $$ |\$$$$$$$\ \$$$$$$$
 ============================================================================================
 ''')
 
-import socket
+import os, json, socket
 import threading
 from argparse import ArgumentParser
 
@@ -94,11 +94,26 @@ class RBalancer:
             print(f"[!] [Error: {E}]")
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
-    parser.add_argument("-s", "--server", help="Host Server Balancer", required=True, type=str)
-    parser.add_argument("-p", "--port", help="PORT Server Balancer", required=True, type=int)
-    parser.add_argument("-l", "--list", help="List Backend Server", required=True, type=str)
-    args = parser.parse_args()
+
+    configFile = "R-Balancer.conf"
+
+    if os.path.isfile(configFile):
+
+        opt = json.loads(open(configFile, "r").read())
+
+    else:
+
+        parser = ArgumentParser()
+        parser.add_argument("-s", "--server", help="Host Server Balancer", required=True, type=str)
+        parser.add_argument("-p", "--port", help="PORT Server Balancer", required=True, type=int)
+        parser.add_argument("-l", "--list", help="List Backend Server", required=True, type=str)
+        args = parser.parse_args()
+
+        opt = {
+            "server": args.server,
+            "port": args.port,
+            "list_server": args.list
+        }
     
-    run = RBalancer(args.list)
-    run.start(args.server, args.port)
+    run = RBalancer(opt["list_server"])
+    run.start(opt["server"], int(opt["port"]))
