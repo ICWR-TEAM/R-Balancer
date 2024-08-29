@@ -1,6 +1,8 @@
 # R-Balancer
 
 ![image](https://github.com/user-attachments/assets/88e5e2cc-5c56-4332-aa9d-c3743c86fb9b)
+![image](https://github.com/user-attachments/assets/145682bf-a015-4210-a476-e8782f30ccfd)
+
 
 R-Balancer is a simple load balancer implementation using the Round-Robin algorithm. It distributes incoming client requests across multiple backend servers to balance the load. This script is designed for use in Python 3.x.
 
