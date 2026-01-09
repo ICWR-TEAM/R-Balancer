@@ -1,0 +1,90 @@
+# R-Balancer
+
+![image](https://github.com/user-attachments/assets/88e5e2cc-5c56-4332-aa9d-c3743c86fb9b)
+![image](https://github.com/user-attachments/assets/145682bf-a015-4210-a476-e8782f30ccfd)
+
+
+R-Balancer is a simple load balancer implementation using the Round-Robin algorithm. It distributes incoming client requests across multiple backend servers to balance the load. This script is designed for use in Python 3.x.
+
+## Features
+
+- **Round-Robin Load Balancing**: Distributes incoming requests evenly across a list of backend servers.
+- **Multithreading**: Handles multiple client connections simultaneously using threads.
+- **SSL Backend Support**: Optional SSL/TLS connections to backend servers for secure communication.
+- **Host Header Override**: Ability to modify the Host header in HTTP requests to avoid detection by tunneling services like ngrok.
+- **Configurable**: Allows customization of server addresses, ports, SSL, and header options via command-line arguments or config file.
+
+## Requirements
+
+- Python 3.x
+- `socket` and `threading` modules (built-in Python libraries)
+
+## Installation
+
+Clone the repository or download the script:
+
+```bash
+git clone <repository-url>
+cd <repository-directory>
+```
+
+## Usage
+
+Run the script using the following command format:
+
+```bash
+python R-Balancer.py -s <host> -p <port> -l "<server1>:<port1>,<server2>:<port2>,..."
+```
+
+### Arguments
+
+- `-s` or `--server`: The IP address or hostname where the load balancer will listen for incoming connections.
+- `-p` or `--port`: The port on which the load balancer will listen.
+- `-l` or `--list`: A comma-separated list of backend servers in the format `host:port`.
+- `--ssl-backend`: (Optional) Enable SSL/TLS for connections to backend servers.
+- `--host-header`: (Optional) Override the Host header in HTTP requests with the specified value (useful for tunneling services).
+
+### Example
+
+To start the load balancer on `0.0.0.0` port `8080` and distribute requests to backend servers `127.0.0.1:8081`, `127.0.0.1:8082`, and `127.0.0.1:8083`:
+
+```bash
+python R-Balancer.py -s 0.0.0.0 -p 8080 -l "127.0.0.1:8081,127.0.0.1:8082,127.0.0.1:8083"
+```
+
+For SSL backend and Host header override (e.g., for ngrok):
+
+```bash
+python R-Balancer.py -s 0.0.0.0 -p 80 -l "backend1:443,backend2:443" --ssl-backend --host-header "your-ngrok-endpoint.ngrok-free.app"
+```
+
+### Or Using Config file
+
+Create config file in same directory with name `R-Balancer.conf`.
+
+Example config:
+
+```json
+{
+    "server": "0.0.0.0",
+    "port": 80,
+    "list_server": "192.168.1.3:80,192.168.1.4:8080,192.168.1.5:8000",
+    "ssl_backend": false,
+    "host_header": "example.com"
+}
+```
+
+- `ssl_backend`: Set to `true` to enable SSL for backend connections.
+- `host_header`: (Optional) Specify a custom Host header value.
+
+## Script Overview
+
+- **Initialization**: `RBalancer` class is initialized with a list of backend servers, SSL backend option, and optional Host header override.
+- **Server List**: The `listServer` method parses the backend server list from a string.
+- **Client Handling**: The `handle_client` method handles incoming client connections and forwards them to backend servers in a round-robin manner, with optional SSL and header modification.
+- **Data Forwarding**: The `forward_data` and `forward_data_modify` methods transfer data between client and server, with support for modifying HTTP requests.
+- **Starting**: The `start` method binds the load balancer to the specified IP and port and begins listening for incoming connections.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
